@@ -1,0 +1,15 @@
+meta {
+  name: Orgs: List All
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{grist.url}}/api/orgs
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

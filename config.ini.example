@@ -1,0 +1,37 @@
+[grist]
+; Hostname, user API key, and document ID for Grist
+host = https://docs.your.url
+api_key = 123456789123456789123456789
+doc_id = 4321654321654321
+
+[notes]
+; Field mapping for the Notes table
+_table = Notes
+device = Device
+note = Note
+
+[devices]
+; Device mapping for inventory metrics to column names
+_table = Devices
+status = Status
+account = Account
+hostname = Hostname
+manufacturer = Manufacturer
+model = Model
+serial = Serial
+hardware_version = Hardware_Version
+board_manufacturer = Board_Manufacturer
+board_model = Board_Model
+board_serial = Board_Serial
+cpu_model = CPU_Model
+cpu_threads = CPU_Threads
+mem_type = Mem_Type
+mem_speed = Mem_Speed
+mem_size = Mem_Size
+mem_model = Mem_Model
+os_name = OS_Name
+os_version = OS_Version
+ip_primary = IP_Primary
+ip_secondary = IP_Secondary
+mac_primary = MAC_Primary
+mac_secondary = MAC_Secondary

@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grist-helper"
+version = "1.0.0"
+authors = [
+    { name = "Charlie Powell", email = "cdp1337@evalagency.com" },
+]
+description = "Script helpers for Grist"
+readme = "README.md"
+license = {text = "GNU AGPLv3"}
+requires-python = ">=3.11"
+classifiers = [
+    # See https://pypi.org/classifiers/ for full list
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+]
+dependencies = [
+    "flask>=3.1.0",
+    "requests>=2.31.0",
+    "gunicorn>=20.1.0",
+]
+
+
+#[project.optional-dependencies]
+#dev = [
+#    "coverage>=5.0.3",
+#]
+
+#[project.urls]
+#Homepage = "https://github.com/cdp1337/sys-info-api"
+#Issues = "https://github.com/cdp1337/sys-info-api/issues"
+
+#[project.scripts]
+#generate_test_data = "sys_info_api.bin.generate_test_data:run"

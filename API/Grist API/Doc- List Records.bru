@@ -1,0 +1,28 @@
+meta {
+  name: Doc: List Records
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{grist.url}}/api/docs/:docId/tables/:tableName/records?filter={"IP_Primary_": "192.168.2.22"}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  filter: {"IP_Primary_": "192.168.2.22"}
+}
+
+params:path {
+  tableName: Devices
+  docId: 2u38YhCiFZ5xDKEpoUrKsp
+}
+
+vars:pre-request {
+  filter: ${encodeURIComponent({"IP_Primary_": "192.168.2.22"})}
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Org: List Access
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{grist.url}}/api/orgs/:orgId/access
+  body: none
+  auth: inherit
+}
+
+params:path {
+  orgId: 3
+}
+
+settings {
+  encodeUrl: true
+}
