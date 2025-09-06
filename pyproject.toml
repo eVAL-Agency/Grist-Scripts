@@ -2,21 +2,22 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+py-modules = ["libs"]
+
 [project]
-name = "grist-helper"
+name = "grist-scripts"
 version = "1.0.0"
 authors = [
     { name = "Charlie Powell", email = "cdp1337@evalagency.com" },
 ]
 description = "Script helpers for Grist"
 readme = "README.md"
-license = {text = "GNU AGPLv3"}
 requires-python = ">=3.11"
 classifiers = [
     # See https://pypi.org/classifiers/ for full list
     "Development Status :: 1 - Planning",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
     "Intended Audience :: System Administrators",

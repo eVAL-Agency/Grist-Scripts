@@ -9,7 +9,7 @@ fi
 
 source .venv/bin/activate
 
-if [ $# -ge 2 -a "$1" == "--dev" ]; then
+if [ $# -ge 1 -a "$1" == "--dev" ]; then
 	flask run
 else
 	gunicorn -w 4 -b '127.0.0.1:5000' 'app:app'

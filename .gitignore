@@ -1,2 +1,3 @@
 /config.ini
 /API/Grist API/environments/*
+/grist_scripts.egg-info/
