@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import request
-from pprint import pprint
 import configparser
 
 from libs.grist import Grist
@@ -9,6 +8,9 @@ from libs.device import device_inventory
 app = Flask(__name__)
 
 config = configparser.ConfigParser()
+# Read default settings from mappings first
+config.read('mappings.ini')
+# Allow user to override everything in their custom config.
 config.read('config.ini')
 grist = Grist(config)
 
