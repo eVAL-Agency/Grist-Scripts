@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -e "config.ini" ]; then
+	echo "ERROR - config.ini not found! Please copy config.ini.example to config.ini and edit it with your settings."
+	exit 1
+fi
+
 if [ ! -e ".venv" ]; then
 	python3 -m venv ./.venv
 	source .venv/bin/activate
