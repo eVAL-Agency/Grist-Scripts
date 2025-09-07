@@ -40,8 +40,10 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 	id = None
 	macs = []
 	if 'mac_primary' in data:
+		data['mac_primary'] = data['mac_primary'].upper()
 		macs.append(data['mac_primary'])
 	if 'mac_secondary' in data:
+		data['mac_secondary'] = data['mac_secondary'].upper()
 		macs.append(data['mac_secondary'])
 
 	device = grist.get('Devices', filter={
