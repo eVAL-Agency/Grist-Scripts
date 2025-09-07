@@ -14,7 +14,7 @@ This applies to `ip_primary` and `ip_secondary` as well based on the mac address
 This is done because a host-based scan will provide both interfaces whereas a network scan
 will provide 2 device entries for the same device, one for each interface.
 
-### Fields Tracked
+### Default Fields Tracked
 
 * hostname
 * manufacturer
@@ -36,6 +36,20 @@ will provide 2 device entries for the same device, one for each interface.
 * ip_secondary
 * mac_primary
 * mac_secondary
+* floor
+* room
+* uplink_device
+* uplink_port
+
+Additional fields can be mapped by adding them to the `[devices]` section of `config.ini`.
+For example to add a "Purpose" column mapped from `purpose` in the source data, add the following to `config.ini`:
+
+```ini
+[devices]
+purpose = Purpose
+```
+
+Default mappings can also be changed by overriding them in the same way.
 
 ### Endpoint
 
@@ -71,6 +85,42 @@ but here are some pre-made scripts which support this collector:
 [Device-run collector](https://github.com/eVAL-Agency/ScriptsCollection/tree/main/dist/inventory).
 Meant to be run with [TacticalRMM](https://docs.tacticalrmm.com/) but can run standalone.
 Features a Python collector for Linux and Powershell for Windows.
+
+### Silent Updates
+
+Some keys can be updated without making a log of the change.
+These can be set from the `_silent` parameter in the `[devices]` configuration.
+
+For example, to make `hostname` be ignored in notes along with the default values, set:
+
+```ini
+[devices]
+_silent = hostname, discover_log, account, status
+```
+
+### Weak Data
+
+Some metric collection scripts may produce unreliable or approximated data about a given device.
+This is particularly true for network-based scanners which do not have direct access to the devices being scanned.
+
+To provide which fields are approximated, set their keys in a list in the `_weak` parameter of the submitted data.
+
+example:
+
+```json
+{
+  "hostname": "somedevice.local",
+  "ip_primary": "1.2.3.4",
+  "mac_primary": "00:11:22:33:44:55",
+  "manufacturer": "Acme Inc.",
+  "_weak": [
+    "hostname", "manufacturer"
+  ]
+}
+```
+
+In this example, the IP and MAC addresses are known, but the hostname and manufacturer are approximated.
+If the record for this device exists and already has data for these two fields, these approximated values will be ignored.
 
 
 ## Requirements

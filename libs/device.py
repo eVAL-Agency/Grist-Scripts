@@ -17,14 +17,15 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 	if 'mac_primary' not in data and 'mac_secondary' not in data:
 		return 400, 'No MAC address provided', None
 
-	macs = []
-	if 'mac_primary' in data:
-		macs.append(data['mac_primary'])
-	if 'mac_secondary' in data:
-		macs.append(data['mac_secondary'])
-
 	# List of fields which should not trigger a change note
-	silent_keys = ['discover_log', 'account', 'status']
+	silent_keys = list(map(str.strip, config.get('devices', '_silent_keys')))
+
+	# Allow "weak" data to be passed in; these keys will be values which should not overwrite existing data.
+	if '_weak' in data:
+		weak_keys = data['_weak']
+		del data['_weak']
+	else:
+		weak_keys = []
 
 	# Override a few fields on the incoming data
 	data['status'] = 'Active'
@@ -37,6 +38,12 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 
 	# Find the device under the given account with one of the MAC addresses as either its primary or secondary.
 	id = None
+	macs = []
+	if 'mac_primary' in data:
+		macs.append(data['mac_primary'])
+	if 'mac_secondary' in data:
+		macs.append(data['mac_secondary'])
+
 	device = grist.get('Devices', filter={
 		config.get('devices', 'account'): [account['id']],
 		config.get('devices', 'mac_primary'): macs,
@@ -104,11 +111,26 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 			except NoOptionError:
 				db_k = None
 
-			if db_k is not None and v is not None and db_k in device['fields']:
-				if device['fields'][db_k] != v:
-					if k not in silent_keys:
-						changes.append(f"{db_k} changed from [{device['fields'][db_k]}] to [{v}]")
-					fields[db_k] = v
+			if db_k is None:
+				# Destination column does not exist, (or at least is not mapped)
+				continue
+
+			if v is None:
+				# No value provided, skip it.
+				continue
+
+			if db_k not in device['fields']:
+				# Target column does not exist in the sheet!
+				continue
+
+			if k in weak_keys and device['fields'][db_k] not in (None, ''):
+				# Weak key provided, and existing value is not empty; skip it.
+				continue
+
+			if device['fields'][db_k] != v:
+				if k not in silent_keys:
+					changes.append(f"{db_k} changed from [{device['fields'][db_k]}] to [{v}]")
+				fields[db_k] = v
 
 		if len(changes) > 0:
 			message = 'Changed applied to existing device'
