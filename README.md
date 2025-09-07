@@ -44,6 +44,19 @@ will provide 2 device entries for the same device, one for each interface.
 * Required Header: `X-Token: <AccountToken>`
 * Content-Type: `application/json`
 * Body: JSON object with the device data
+* Response: JSON with `status` (HTTP status code), `success`/`error` message of change, and `id` on successful operation
+
+For example submitting a POST request without an `X-Token` header will return:
+
+```json
+{"status": 400, "error": "Missing X-Token header"}
+```
+
+Submitting a valid request with no changes will result in:
+
+```json
+{"id": 378, "status": 200, "success": "No changes detected"}
+```
 
 ### Authentication
 

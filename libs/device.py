@@ -15,7 +15,7 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 	"""
 
 	if 'mac_primary' not in data and 'mac_secondary' not in data:
-		return "No MAC address provided", 400
+		return 400, 'No MAC address provided', None
 
 	macs = []
 	if 'mac_primary' in data:
@@ -33,6 +33,7 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 	# Assemble the payload to send to the spreadsheet
 	fields = {}
 	log = ''
+	message = ''
 
 	# Find the device under the given account with one of the MAC addresses as either its primary or secondary.
 	id = None
@@ -104,11 +105,15 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 					fields[db_k] = v
 
 		if len(changes) > 0:
+			message = 'Changed applied to existing device'
 			log = 'Detected changes from inventory update:\n\n* ' + '\n* '.join(changes)
+		else:
+			message = 'No changes detected'
 
 		if len(fields) > 0:
 			grist.update(config.get('devices', '_table'), id, fields)
 	else:
+		message = 'New device added to inventory'
 		log = 'New device added from inventory update.'
 		for k, v in data.items():
 			db_k = config.get('devices', k)
@@ -124,4 +129,4 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 			config.get('notes', 'note'): log,
 		}
 		grist.add(config.get('notes', '_table'), log_data)
-	return 'Saved device inventory successfully', 200
+	return 200, message, {'id': id}
