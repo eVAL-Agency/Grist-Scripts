@@ -119,6 +119,10 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 				# No value provided, skip it.
 				continue
 
+			if v.strip() == '':
+				# Skip values that are just whitespace
+				continue
+
 			if db_k not in device['fields']:
 				# Target column does not exist in the sheet!
 				continue
