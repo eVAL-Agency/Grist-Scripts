@@ -115,7 +115,7 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 				# Destination column does not exist, (or at least is not mapped)
 				continue
 
-			if v is None:
+			if v in (None, ''):
 				# No value provided, skip it.
 				continue
 
