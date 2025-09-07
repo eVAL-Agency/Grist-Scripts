@@ -18,7 +18,7 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 		return 400, 'No MAC address provided', None
 
 	# List of fields which should not trigger a change note
-	silent_keys = list(map(str.strip, config.get('devices', '_silent')))
+	silent_keys = list(map(str.strip, config.get('devices', '_silent').split(',')))
 
 	# Allow "weak" data to be passed in; these keys will be values which should not overwrite existing data.
 	if '_weak' in data:
