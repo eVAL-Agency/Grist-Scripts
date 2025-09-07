@@ -1,4 +1,4 @@
-from configparser import ConfigParser
+from configparser import ConfigParser, NoOptionError
 
 from libs.grist import Grist
 
@@ -97,8 +97,14 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 		# Device exists, selectively update changed records and keep a tally of changes.
 		changes = []
 		for k, v in data.items():
-			db_k = config.get('devices', k)
-			if v is not None and db_k and db_k in device['fields']:
+			try:
+				db_k = config.get('devices', k)
+				if db_k == '':
+					db_k = None
+			except NoOptionError:
+				db_k = None
+
+			if db_k is not None and v is not None and db_k in device['fields']:
 				if device['fields'][db_k] != v:
 					if k not in silent_keys:
 						changes.append(f"{db_k} changed from [{device['fields'][db_k]}] to [{v}]")
@@ -116,8 +122,14 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 		message = 'New device added to inventory'
 		log = 'New device added from inventory update.'
 		for k, v in data.items():
-			db_k = config.get('devices', k)
-			if v is not None and db_k:
+			try:
+				db_k = config.get('devices', k)
+				if db_k == '':
+					db_k = None
+			except NoOptionError:
+				db_k = None
+
+			if db_k is not None and v is not None:
 				fields[db_k] = v
 
 		id = grist.add(config.get('devices', '_table'), fields)
