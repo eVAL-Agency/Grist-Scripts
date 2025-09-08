@@ -1,3 +1,4 @@
+import ipaddress
 from configparser import ConfigParser, NoOptionError
 
 from libs.grist import Grist
@@ -169,4 +170,27 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 			config.get('notes', 'note'): log,
 		}
 		grist.add(config.get('notes', '_table'), log_data)
+
+	# Check the IPs of this device and log any WAN IP that may be present.
+	# These are usually notable to keep track of, particularly in the case they're statically assigned.
+	ips = []
+	if 'ip_primary' in data:
+		ips.append(data['ip_primary'])
+	if 'ip_secondary' in data:
+		ips.append(data['ip_secondary'])
+
+	for address in ips:
+		ip = ipaddress.ip_address(address)
+		if ip.is_global:
+			grist.upsert(
+				config.get('wanips', '_table'),
+				{
+					config.get('wanips', 'ip'): address,
+				},
+				{
+					config.get('wanips', 'device'): id,
+					config.get('wanips', 'account'): account['id'],
+				}
+			)
+
 	return 200, message, {'id': id}

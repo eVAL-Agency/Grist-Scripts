@@ -1,0 +1,39 @@
+meta {
+  name: Doc: Note Upsert
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{grist.url}}/api/docs/:docId/tables/:tableName/records
+  body: json
+  auth: inherit
+}
+
+params:path {
+  tableName: Notes
+  docId: 2u38YhCiFZ5xDKEpoUrKsp
+}
+
+body:json {
+  {
+    "records": [
+        {
+        "require": {
+          "Task": "testupsert"
+        },
+        "fields": {
+          "Note": "This is a test note"
+        }
+      }
+    ]
+  }
+}
+
+vars:pre-request {
+  ~filter: ${encodeURIComponent({"IP_Primary_": "192.168.2.22"})}
+}
+
+settings {
+  encodeUrl: true
+}

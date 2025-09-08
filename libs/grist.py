@@ -51,7 +51,7 @@ class Grist:
 
 	def add(self, table: str, fields: dict):
 		"""
-		Add a new record to a Grist document and table.
+		Add a new record to a Grist document/table.
 
 		:param table: The table name.
 		:param fields: A dictionary of field names and their values for the new record.
@@ -77,7 +77,7 @@ class Grist:
 
 	def update(self, table: str, id: int, fields: dict):
 		"""
-		Add a new record to a Grist document and table.
+		Update an existing record in a Grist document/table.
 
 		:param table: The table name.
 		:param fields: A dictionary of field names and their values for the new record.
@@ -95,6 +95,35 @@ class Grist:
 		}
 
 		response = requests.patch(url, headers=headers, json=payload)
+
+		if response.status_code == 200 or response.status_code == 201:
+			return response.json()
+		else:
+			response.raise_for_status()
+
+	def upsert(self, table: str, matches: dict, fields: dict):
+		"""
+		Update or insert a record to a Grist document/table.
+
+		If the "required" fields match an existing record, it will be updated.
+		Otherwise a new record is created with the "required" fields and regular fields.
+
+		:param table: The table name.
+		:param matches: A dictionary of field names and their values to use for matching existing records.
+		:param fields: A dictionary of field names and their values for the new record.
+		:see: https://support.getgrist.com/api/#tag/records/operation/replaceRecords
+		"""
+
+		url = f"{self.host}/api/docs/{self.doc_id}/tables/{table}/records"
+		headers = {
+			'Authorization': f"Bearer {self.api_key}",
+			'Content-Type': 'application/json'
+		}
+		payload = {
+			'records': [{'require': matches, 'fields': fields}]
+		}
+
+		response = requests.put(url, headers=headers, json=payload)
 
 		if response.status_code == 200 or response.status_code == 201:
 			return response.json()
