@@ -122,7 +122,7 @@ def device_inventory(config: ConfigParser, grist: Grist, account: dict, data: di
 				# No value provided, skip it.
 				continue
 
-			if v.strip() == '':
+			if isinstance(v, str) and v.strip() == '':
 				# Skip values that are just whitespace
 				continue
 
